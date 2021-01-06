@@ -1,0 +1,6 @@
+package ru.home.books_app
+
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity: FlutterActivity() {
+}
