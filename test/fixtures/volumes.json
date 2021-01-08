@@ -1,0 +1,133 @@
+{
+  "kind": "books#volumes",
+  "totalItems": 546,
+  "items": [
+    {
+      "kind": "books#volume",
+      "id": "36kxuQAACAAJ",
+      "etag": "isWm6P94uCU",
+      "selfLink": "https://www.googleapis.com/books/v1/volumes/36kxuQAACAAJ",
+      "volumeInfo": {
+        "title": "The Works of Jonathan Swift Volume 15",
+        "authors": [
+          "Jonathan Swift"
+        ],
+        "publisher": "Hardpress Publishing",
+        "publishedDate": "2012-01",
+        "description": "Unlike some other reproductions of classic texts (1) We have not used OCR(Optical Character Recognition), as this leads to bad quality books with introduced typos. (2) In books where there are images such as portraits, maps, sketches etc We have endeavoured to keep the quality of these images, so they represent accurately the original artefact. Although occasionally there may be certain imperfections with these old texts, we feel they deserve to be made available for future generations to enjoy.",
+        "industryIdentifiers": [
+          {
+            "type": "ISBN_10",
+            "identifier": "1407757113"
+          },
+          {
+            "type": "ISBN_13",
+            "identifier": "9781407757117"
+          }
+        ],
+        "readingModes": {
+          "text": false,
+          "image": false
+        },
+        "pageCount": 466,
+        "printType": "BOOK",
+        "maturityRating": "NOT_MATURE",
+        "allowAnonLogging": false,
+        "contentVersion": "preview-1.0.0",
+        "imageLinks": {
+          "smallThumbnail": "http://books.google.com/books/content?id=36kxuQAACAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api",
+          "thumbnail": "http://books.google.com/books/content?id=36kxuQAACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api"
+        },
+        "language": "en",
+        "previewLink": "http://books.google.ru/books?id=36kxuQAACAAJ&dq=swift&hl=&cd=101&source=gbs_api",
+        "infoLink": "http://books.google.ru/books?id=36kxuQAACAAJ&dq=swift&hl=&source=gbs_api",
+        "canonicalVolumeLink": "https://books.google.com/books/about/The_Works_of_Jonathan_Swift_Volume_15.html?hl=&id=36kxuQAACAAJ"
+      },
+      "saleInfo": {
+        "country": "RU",
+        "saleability": "NOT_FOR_SALE",
+        "isEbook": false
+      },
+      "accessInfo": {
+        "country": "RU",
+        "viewability": "NO_PAGES",
+        "embeddable": false,
+        "publicDomain": false,
+        "textToSpeechPermission": "ALLOWED",
+        "epub": {
+          "isAvailable": false
+        },
+        "pdf": {
+          "isAvailable": false
+        },
+        "webReaderLink": "http://play.google.com/books/reader?id=36kxuQAACAAJ&hl=&printsec=frontcover&source=gbs_api",
+        "accessViewStatus": "NONE",
+        "quoteSharingAllowed": false
+      }
+    },
+    {
+      "kind": "books#volume",
+      "id": "LJRDAQAAIAAJ",
+      "etag": "UzkChbjphP8",
+      "selfLink": "https://www.googleapis.com/books/v1/volumes/LJRDAQAAIAAJ",
+      "volumeInfo": {
+        "title": "The Works of Jonathan Swift: Journal to Stella (Letter XLIII-LXV). Tracts, political and historical, prior to the accession of George I. The Examiner",
+        "authors": [
+          "Jonathan Swift",
+          "Sir Walter Scott"
+        ],
+        "publishedDate": "1883",
+        "industryIdentifiers": [
+          {
+            "type": "OTHER",
+            "identifier": "STANFORD:36105011790016"
+          }
+        ],
+        "readingModes": {
+          "text": false,
+          "image": true
+        },
+        "printType": "BOOK",
+        "maturityRating": "NOT_MATURE",
+        "allowAnonLogging": false,
+        "contentVersion": "0.0.1.0.full.1",
+        "panelizationSummary": {
+          "containsEpubBubbles": false,
+          "containsImageBubbles": false
+        },
+        "imageLinks": {
+          "smallThumbnail": "http://books.google.com/books/content?id=LJRDAQAAIAAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+          "thumbnail": "http://books.google.com/books/content?id=LJRDAQAAIAAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+        },
+        "language": "en",
+        "previewLink": "http://books.google.ru/books?id=LJRDAQAAIAAJ&printsec=frontcover&dq=swift&hl=&cd=104&source=gbs_api",
+        "infoLink": "https://play.google.com/store/books/details?id=LJRDAQAAIAAJ&source=gbs_api",
+        "canonicalVolumeLink": "https://play.google.com/store/books/details?id=LJRDAQAAIAAJ"
+      },
+      "saleInfo": {
+        "country": "RU",
+        "saleability": "FREE",
+        "isEbook": true,
+        "buyLink": "https://play.google.com/store/books/details?id=LJRDAQAAIAAJ&rdid=book-LJRDAQAAIAAJ&rdot=1&source=gbs_api"
+      },
+      "accessInfo": {
+        "country": "RU",
+        "viewability": "ALL_PAGES",
+        "embeddable": true,
+        "publicDomain": true,
+        "textToSpeechPermission": "ALLOWED",
+        "epub": {
+          "isAvailable": false,
+          "downloadLink": "http://books.google.ru/books/download/The_Works_of_Jonathan_Swift_Journal_to_S.epub?id=LJRDAQAAIAAJ&hl=&output=epub&source=gbs_api"
+        },
+        "pdf": {
+          "isAvailable": true,
+          "downloadLink": "http://books.google.ru/books/download/The_Works_of_Jonathan_Swift_Journal_to_S.pdf?id=LJRDAQAAIAAJ&hl=&output=pdf&sig=ACfU3U1qzq7jBq3L3Hcaoz6XRJ3JNVbxMQ&source=gbs_api"
+        },
+        "webReaderLink": "http://play.google.com/books/reader?id=LJRDAQAAIAAJ&hl=&printsec=frontcover&source=gbs_api",
+        "accessViewStatus": "FULL_PUBLIC_DOMAIN",
+        "quoteSharingAllowed": false
+      }
+    }
+  ]
+}
