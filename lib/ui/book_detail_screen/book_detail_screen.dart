@@ -1,56 +1,41 @@
 import 'package:books_app/data/book.dart';
-import 'package:books_app/ui/web_screen/web_screen.dart';
+import 'package:books_app/model/favorites/repository/favorites_repo.dart';
+import 'package:books_app/ui/book_detail_screen/book_detail_wm.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:mwwm/mwwm.dart';
+import 'package:provider/provider.dart';
+import 'package:relation/relation.dart';
 
-class BookDetailScreen extends StatelessWidget {
-  BookDetailScreen({@required this.book, Key key})
-      : assert(book != null),
-        super(key: key);
-
-  final Book book;
+class BookDetailScreen extends CoreMwwmWidget {
+  BookDetailScreen({@required Book book})
+      : super(widgetModelBuilder: (context) {
+          return BookDetailWm(
+              context.read<WidgetModelDependencies>(),
+              context.read<IFavoritesRepository>(),
+              book,
+              Navigator.of(context));
+        });
 
   @override
-  Widget build(BuildContext context) {
-    var theme = Theme.of(context);
+  _BookDetailScreenState createState() => _BookDetailScreenState();
+}
 
+class _BookDetailScreenState extends WidgetState<BookDetailWm> {
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
           title: Text("Book details"),
           backgroundColor: Colors.deepPurpleAccent),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(height: 32),
-              _buildBookCover(),
-              SizedBox(height: 32),
-              _buildButtonsBar(context),
-              SizedBox(height: 8),
-              Text(book.title, style: theme.textTheme.headline5),
-              SizedBox(height: 16),
-              Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                Text("Author: ",
-                    style: theme.textTheme.bodyText1
-                        .copyWith(color: Colors.grey.shade700)),
-                Text(book.authors.join(", "),
-                    style: theme.textTheme.bodyText1
-                        .copyWith(fontWeight: FontWeight.bold)),
-              ]),
-              SizedBox(height: 16),
-              Text(book.description,
-                  style: theme.textTheme.bodyText1,
-                  textAlign: TextAlign.justify)
-            ],
-          ),
-        ),
+      body: EntityStateBuilder(
+        streamedState: wm.bookState,
+        child: (context, book) => _buildBody(context, book),
       ),
     );
   }
 
-  Widget _buildBookCover() {
+  Widget _buildBookCover(Book book) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -73,7 +58,7 @@ class BookDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildButtonsBar(BuildContext context) {
+  Widget _buildButtonsBar(BuildContext context, Book book) {
     return Row(mainAxisAlignment: MainAxisAlignment.end, children: [
       IconButton(
           iconSize: 32,
@@ -83,21 +68,65 @@ class BookDetailScreen extends StatelessWidget {
           ),
           onPressed: () {
             if (book.infoLink != null) {
-              Navigator.of(context).push(MaterialPageRoute(
-                  fullscreenDialog: true,
-                  builder: (context) => WebScreen(
-                      webLink: book.buyLink ?? book.infoLink,
-                      title: book.title)));
+              wm.openWebPreviewAction(book);
             }
           }),
       SizedBox(width: 8),
-      IconButton(
-          iconSize: 32,
-          icon: Icon(
-            Icons.favorite,
-            color: Colors.red,
-          ),
-          onPressed: () {})
+      StreamedStateBuilder(
+          streamedState: wm.bookFavoritesState,
+          builder: (context, isFavorite) =>
+              _buildFavoriteButton(context, book, isFavorite)),
     ]);
+  }
+
+  Widget _buildBody(BuildContext context, Book book) {
+    var theme = Theme.of(context);
+
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(height: 32),
+            _buildBookCover(book),
+            SizedBox(height: 32),
+            _buildButtonsBar(context, book),
+            SizedBox(height: 8),
+            Text(book.title, style: theme.textTheme.headline5),
+            SizedBox(height: 16),
+            Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+              Text("Author: ",
+                  style: theme.textTheme.bodyText1
+                      .copyWith(color: Colors.grey.shade700)),
+              Text(book.authors.join(", "),
+                  style: theme.textTheme.bodyText1
+                      .copyWith(fontWeight: FontWeight.bold)),
+            ]),
+            SizedBox(height: 16),
+            Text(book.description ?? "",
+                style: theme.textTheme.bodyText1, textAlign: TextAlign.justify)
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFavoriteButton(
+      BuildContext context, Book book, bool isFavorite) {
+    var iconSize = 32.0;
+    var icon = Icons.favorite;
+
+    if (isFavorite) {
+      return IconButton(
+          iconSize: iconSize,
+          icon: Icon(icon, color: Colors.red),
+          onPressed: () => wm.removeFromFavoritesAction(book));
+    }
+
+    return IconButton(
+        iconSize: iconSize,
+        icon: Icon(icon, color: Colors.grey),
+        onPressed: () => wm.addToFavoritesAction(book));
   }
 }

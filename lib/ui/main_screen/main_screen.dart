@@ -1,68 +1,104 @@
-import 'package:books_app/data/book.dart';
-import 'package:books_app/ui/favorites_screen/favorites_route.dart';
-import 'package:books_app/ui/favorites_screen/favorites_screen.dart';
+import 'package:books_app/data/books_list.dart';
 import 'package:books_app/ui/widgets/book_list_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_search_bar/flutter_search_bar.dart';
+import 'package:mwwm/mwwm.dart';
+import 'package:relation/relation.dart';
 
-class MainScreen extends StatefulWidget {
+import 'main_wm.dart';
+
+class MainScreen extends CoreMwwmWidget {
+  MainScreen({
+    @required WidgetModelBuilder widgetModelBuilder,
+  })  : assert(widgetModelBuilder != null),
+        super(widgetModelBuilder: widgetModelBuilder);
+
   @override
   _MainScreenState createState() => _MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _MainScreenState extends WidgetState<MainWm> {
   SearchBar searchBar;
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   _MainScreenState() {
-    searchBar = new SearchBar(
+    searchBar = _buildSearchBar();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(appBar: searchBar.build(context), body: _buildBody());
+  }
+
+  SearchBar _buildSearchBar() {
+    return SearchBar(
         inBar: false,
         buildDefaultAppBar: _buildAppBar,
         setState: setState,
-        onSubmitted: (_) {
-          print("submitted");
+        onSubmitted: (query) {
+          wm.searchBookAction(query);
         },
         onCleared: () {},
         onClosed: () {});
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        key: _scaffoldKey,
-        appBar: searchBar.build(context),
-        body: ListView.separated(
-            separatorBuilder: (context, index) => Divider(height: 4),
-            itemCount: 4,
-            itemBuilder: (_, index) {
-              var book = Book(
-                  id: "b$index",
-                  title:
-                      "ZENONIA GUİDES 4 v1.1.6 + Mod (a lot of money) for Android",
-                  authors: ["Hector Smith", "Author2"],
-                  description:
-                      "Now also available in German! The ultimate action RPG has returned, now in stunning HD! If the forces of evil shake the world, the heroes of the time have to leave the fate of the world again on the right track. Come together with Regret, Chael, ECNE, Lu, and many others, the greatest ZENONIA adventure yet! ───────────────────── The best looking ZENONIA® ALLERZEITEN Explore the world in HD, now with spectacular graphics and fantastic animations optimized for high quality displays. DYNAMIC AND FIGHT visceral and become a great fighter – unleash your combo hits and devastating skills with explosive graphics, incredible and enchanting animations. EQUIPPED YOU AND YOU INDIVIDUALLY FOR THE ADVENTURE Skille Skille and upgrade your warrior, rogue, hunter or druid with countless armor, weapons and items.",
-                  thumbnailLink:
-                      "http://books.google.com/books/content?id=XLVnCAAAQBAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api",
-                  infoLink:
-                      "https://play.google.com/store/books/details?id=aqpJDwAAQBAJ&rdid=book-aqpJDwAAQBAJ&rdot=1&source=gbs_api");
-
-              return BookListItemWidget(book: book);
-            }));
-  }
-
   AppBar _buildAppBar(BuildContext context) {
     return AppBar(
-      title: Text('Books'),
+      title: StreamedStateBuilder(
+          streamedState: wm.titleState,
+          builder: (context, title) => Text(title)),
       backgroundColor: Colors.deepPurpleAccent,
       actions: [
         searchBar.getSearchAction(context),
         IconButton(
             icon: Icon(Icons.favorite),
-            onPressed: () {
-              Navigator.of(context).push(FavoritesRoute());
-            }),
+            onPressed: () => wm.openFavoritesAction()),
         IconButton(icon: Icon(Icons.more_vert), onPressed: () {}),
+      ],
+    );
+  }
+
+  Widget _buildBody() {
+    return EntityStateBuilder(
+        streamedState: wm.booksState,
+        loadingChild: Center(child: CircularProgressIndicator()),
+        child: (context, booksList) => _buildBooksList(booksList));
+  }
+
+  Widget _buildBooksList(BooksList booksList) {
+    if (booksList.totalItems == null) {
+      return _buildInitialContainer("");
+    }
+
+    if (booksList.totalItems == 0 || booksList.items.isEmpty) {
+      return _buildInitialContainer("No books found");
+    }
+
+    return ListView.separated(
+        separatorBuilder: (context, index) => Divider(height: 4),
+        itemCount: booksList.items.length,
+        itemBuilder: (_, index) {
+          var book = booksList.items[index];
+          return BookListItemWidget(
+              book: book, onTap: (book) => wm.openBookDetailAction(book));
+        });
+  }
+
+  Widget _buildInitialContainer(String text) {
+    var textStyle =
+        Theme.of(context).textTheme.headline6.copyWith(color: Colors.grey);
+
+    return Stack(
+      children: [
+        Container(
+          padding: EdgeInsets.only(top: 20),
+          child: Align(
+              child: Text(text, style: textStyle),
+              alignment: Alignment.topCenter),
+        ),
+        Container(
+          alignment: Alignment.center,
+          child: Icon(Icons.menu_book, color: Colors.grey.shade300, size: 200),
+        )
       ],
     );
   }

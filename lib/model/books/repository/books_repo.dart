@@ -8,18 +8,24 @@ abstract class IBooksRepository {
 class FakeBooksRepository implements IBooksRepository {
   @override
   Future<BooksList> searchBooks(String query) async {
+    if (query.isEmpty) {
+      return Future.delayed(
+          Duration(seconds: 2), () => BooksList(totalItems: 0, items: []));
+    }
+
     List<Book> books = [0, 1, 2, 3, 4, 5]
         .map((index) => Book(
             id: index.toString(),
             title: "Title $index",
             authors: ["Author1", "Author2"],
-            description: "Description",
+            description: "dfgdf",
+            infoLink: "http://books.google.ru/books?id=z60yAAAAIAAJ&dq=%D0%B0%D1%80%D0%B0%D0%BF&hl=&source=gbs_api",
             thumbnailLink:
                 "http://books.google.com/books/content?id=XLVnCAAAQBAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api"))
         .toList();
 
     var booksList = BooksList(totalItems: 10, items: books);
 
-    return Future.delayed(Duration(seconds: 3), () => booksList);
+    return Future.delayed(Duration(seconds: 2), () => booksList);
   }
 }

@@ -1,3 +1,4 @@
+import 'package:books_app/model/books/repository/books_repo.dart';
 import 'package:books_app/model/favorites/repository/favorites_repo.dart';
 import 'package:books_app/ui/app.dart';
 import 'package:flutter/widgets.dart';
@@ -14,6 +15,7 @@ void main() {
       Provider<IFavoritesRepository>(
         create: (context) => FakeFavoritesRepository(),
       ),
+      Provider<IBooksRepository>(create: (context) => FakeBooksRepository())
     ],
     child: MyApp(),
   ));

@@ -1,14 +1,14 @@
 import 'package:books_app/data/book.dart';
-import 'package:books_app/ui/book_detail_screen/book_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class BookListItemWidget extends StatelessWidget {
-  BookListItemWidget({@required this.book, Key key})
-      : assert(book != null),
+  BookListItemWidget({@required this.book, @required this.onTap, Key key})
+      : assert(book != null && onTap != null),
         super(key: key);
 
   final Book book;
+  final Function(Book book) onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -17,10 +17,7 @@ class BookListItemWidget extends StatelessWidget {
     var imageWidth = 75.0;
 
     return InkWell(
-      onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => BookDetailScreen(book: book)));
-      },
+      onTap: () => onTap(book),
       child: Row(
         children: [
           Hero(

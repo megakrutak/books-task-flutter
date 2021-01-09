@@ -4,10 +4,11 @@ abstract class IFavoritesRepository {
   Future<List<Book>> getBooks();
   Future addBook(Book book);
   Future removeBook(book);
+  Future<bool> contains(book);
 }
 
 class FakeFavoritesRepository implements IFavoritesRepository {
-  List<Book> books = List.of([
+  Set<Book> books = Set.of([
     Book(
         id: "b1231",
         title: "ZENONIA GUİDES 4 v1.1.6 + Mod (a lot of money) for Android",
@@ -29,7 +30,7 @@ class FakeFavoritesRepository implements IFavoritesRepository {
 
   @override
   Future<List<Book>> getBooks() async {
-    return Future.delayed(Duration(seconds: 1), () => books);
+    return Future.delayed(Duration(seconds: 1), () => books.toList());
   }
 
   @override
@@ -37,5 +38,10 @@ class FakeFavoritesRepository implements IFavoritesRepository {
     return Future.delayed(Duration(seconds: 1), () {
       books.removeWhere((element) => element.id == book.id);
     });
+  }
+
+  @override
+  Future<bool> contains(book) {
+    return Future.delayed(Duration(milliseconds: 200), () => books.contains(book));
   }
 }
