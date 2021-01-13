@@ -17,7 +17,7 @@ void main() {
       ),
       Provider<IBooksRepository>(create: (context) => FakeBooksRepository())
     ],
-    child: MyApp(),
+    child: BooksApp(),
   ));
 }
 

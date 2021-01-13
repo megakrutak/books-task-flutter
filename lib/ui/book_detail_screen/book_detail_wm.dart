@@ -1,6 +1,7 @@
 import 'package:books_app/data/book.dart';
 import 'package:books_app/model/favorites/repository/favorites_repo.dart';
 import 'package:books_app/ui/app.dart';
+import 'package:books_app/ui/favorites_screen/favorites_wm.dart';
 import 'package:books_app/ui/web_screen/web_screen_route.dart';
 import 'package:flutter/widgets.dart' as Widgets;
 import 'package:mwwm/mwwm.dart';
@@ -54,6 +55,7 @@ class BookDetailWm extends WidgetModel {
     bookFavoritesState.accept(true);
     try {
       await favoritesRepo.addBook(book);
+      FavoritesWm.favoritesReporter.accept();
     } catch (e) {
       handleError(e);
     }
@@ -63,6 +65,7 @@ class BookDetailWm extends WidgetModel {
     bookFavoritesState.accept(false);
     try {
       await favoritesRepo.removeBook(book);
+      FavoritesWm.favoritesReporter.accept();
     } catch (e) {
       handleError(e);
     }

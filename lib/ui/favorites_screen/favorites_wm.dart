@@ -18,6 +18,8 @@ class FavoritesWm extends WidgetModel {
   final openBookDetail = Action<Book>();
   final dismissAction = Action<Book>();
 
+  static final favoritesReporter = StreamedState<void>();
+
   @override
   void onLoad() {
     super.onLoad();
@@ -37,6 +39,9 @@ class FavoritesWm extends WidgetModel {
     );
 
     subscribe(openBookDetail.stream, (Book book) => _routeToDetail(book));
+
+    //reload favorites list on value updated
+    subscribe(favoritesReporter.stream, (t) => _loadFavorites());
   }
 
   Future _loadFavorites() async {

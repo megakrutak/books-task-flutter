@@ -5,7 +5,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'favorites_screen/favorites_screen_route.dart';
 
-class MyApp extends StatelessWidget {
+class BooksApp extends StatelessWidget {
+
+  static Function routing = (RouteSettings settings) {
+    switch (settings.name) {
+      case RouteConst.initialRoute:
+        return MainScreenRoute();
+      case RouteConst.favoritesRoute:
+        return FavoritesScreenRoute();
+      case RouteConst.bookDetailRoute:
+        BookDetailScreenArguments args = settings.arguments;
+        return BookDetailScreenRoute(args.book);
+      case RouteConst.webPreviewRoute:
+        WebScreenArguments args = settings.arguments;
+        return WebScreenRoute(args.webLink, args.title);
+      default:
+        return MainScreenRoute();
+    }
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -14,22 +31,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
           primarySwatch: Colors.deepPurple
       ),
-      onGenerateRoute: (settings) {
-        switch (settings.name) {
-          case RouteConst.initialRoute:
-            return MainScreenRoute();
-          case RouteConst.favoritesRoute:
-            return FavoritesScreenRoute();
-          case RouteConst.bookDetailRoute:
-            BookDetailScreenArguments args = settings.arguments;
-            return BookDetailScreenRoute(args.book);
-          case RouteConst.webPreviewRoute:
-            WebScreenArguments args = settings.arguments;
-            return WebScreenRoute(args.webLink, args.title);
-          default:
-            return MainScreenRoute();
-        }
-      },
+      onGenerateRoute: routing,
     );
   }
 }
