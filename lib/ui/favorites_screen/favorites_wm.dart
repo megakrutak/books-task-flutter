@@ -2,17 +2,17 @@ import 'package:books_app/data/book.dart';
 import 'package:books_app/model/favorites/repository/favorites_repo.dart';
 import 'package:books_app/ui/app.dart';
 import 'package:books_app/ui/book_detail_screen/book_detail_screen_route.dart';
-import 'package:flutter/widgets.dart' as Widgets;
+import 'package:books_app/utils/navigation/INavigationRouter.dart';
 import 'package:mwwm/mwwm.dart';
 import 'package:relation/relation.dart';
 
 class FavoritesWm extends WidgetModel {
   FavoritesWm(WidgetModelDependencies baseDependencies, this.favoritesRepo,
-      this.navigator)
+      this._navigationRouter)
       : super(baseDependencies);
 
   final IFavoritesRepository favoritesRepo;
-  final Widgets.NavigatorState navigator;
+  final INavigationRouter _navigationRouter;
 
   final favoritesState = EntityStreamedState<List<Book>>(EntityState.loading());
   final openBookDetail = Action<Book>();
@@ -69,7 +69,7 @@ class FavoritesWm extends WidgetModel {
   }
 
   _routeToDetail(Book book) {
-    navigator.pushNamed(RouteConst.bookDetailRoute,
+    _navigationRouter.pushNamed(RouteConst.bookDetailRoute,
         arguments: BookDetailScreenArguments(book));
   }
 }

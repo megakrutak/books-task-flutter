@@ -3,13 +3,13 @@ import 'package:books_app/data/books_list.dart';
 import 'package:books_app/model/books/repository/books_repo.dart';
 import 'package:books_app/ui/app.dart';
 import 'package:books_app/ui/book_detail_screen/book_detail_screen_route.dart';
-import 'package:flutter/widgets.dart' as Widgets;
+import 'package:books_app/utils/navigation/INavigationRouter.dart';
 import 'package:mwwm/mwwm.dart';
 import 'package:relation/relation.dart';
 
 class MainWm extends WidgetModel {
-  MainWm(
-      WidgetModelDependencies baseDependencies, this.booksRepo, this.navigator)
+  MainWm(WidgetModelDependencies baseDependencies, this.booksRepo,
+      this._navigationRouter)
       : super(baseDependencies);
 
   final IBooksRepository booksRepo;
@@ -18,7 +18,7 @@ class MainWm extends WidgetModel {
   final searchBookAction = Action<String>();
   final openBookDetailAction = Action<Book>();
   final openFavoritesAction = Action();
-  final Widgets.NavigatorState navigator;
+  final INavigationRouter _navigationRouter;
   final titleState = StreamedState<String>("Books");
 
   @override
@@ -31,7 +31,7 @@ class MainWm extends WidgetModel {
         openBookDetailAction.stream, (Book book) => _routeToBookDetail(book));
 
     subscribe(openFavoritesAction.stream,
-        (_) => navigator.pushNamed(RouteConst.favoritesRoute));
+        (_) => _navigationRouter.pushNamed(RouteConst.favoritesRoute));
   }
 
   Future _searchBooks(String query) async {
@@ -47,7 +47,7 @@ class MainWm extends WidgetModel {
   }
 
   _routeToBookDetail(Book book) {
-    navigator.pushNamed(RouteConst.bookDetailRoute,
+    _navigationRouter.pushNamed(RouteConst.bookDetailRoute,
         arguments: BookDetailScreenArguments(book));
   }
 }

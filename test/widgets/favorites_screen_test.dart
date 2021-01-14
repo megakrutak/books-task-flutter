@@ -1,3 +1,4 @@
+import 'package:books_app/utils/navigation/INavigationRouter.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:io';
 
@@ -12,6 +13,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mwwm/mwwm.dart';
+
+class _TestHttpOverrides extends HttpOverrides {}
+
+class FakeFavoritesRepository extends Mock implements IFavoritesRepository {}
+
+class MockOnGenerateRoute extends Mock {
+  Route<dynamic> call(RouteSettings settings);
+}
+
+class FakeNavigationRouter extends Mock implements INavigationRouter {}
+
 
 void main() {
   WidgetModelDependencies deps;
@@ -51,7 +63,7 @@ void main() {
 
       var widget =
           MaterialApp(home: FavoritesScreen(widgetModelBuilder: (context) {
-        return FavoritesWm(deps, repo, Navigator.of(context));
+        return FavoritesWm(deps, repo, FakeNavigationRouter());
       }));
 
       await tester.pumpWidget(widget);
@@ -80,7 +92,7 @@ void main() {
 
       var widget =
           MaterialApp(home: FavoritesScreen(widgetModelBuilder: (context) {
-        return FavoritesWm(deps, repo, Navigator.of(context));
+        return FavoritesWm(deps, repo, FakeNavigationRouter());
       }));
 
       await tester.pumpWidget(widget);
@@ -109,7 +121,7 @@ void main() {
 
       var widget =
           MaterialApp(home: FavoritesScreen(widgetModelBuilder: (context) {
-        return FavoritesWm(deps, repo, Navigator.of(context));
+        return FavoritesWm(deps, repo, FakeNavigationRouter());
       }));
 
       await tester.pumpWidget(widget);
@@ -145,7 +157,7 @@ void main() {
       var widget = MaterialApp(
           onGenerateRoute: routing,
           home: FavoritesScreen(widgetModelBuilder: (context) {
-            return FavoritesWm(deps, repo, Navigator.of(context));
+            return FavoritesWm(deps, repo, NavigationRouter.getInstance(context));
           }));
 
       await tester.pumpWidget(widget);
@@ -154,19 +166,13 @@ void main() {
       await tester.tap(find.widgetWithText(BookListItemWidget, "Title2"));
       await tester.pumpAndSettle();
 
-      RouteSettings routeSettings = verify(routing.call(captureAny)).captured[0];
+      RouteSettings routeSettings =
+          verify(routing.call(captureAny)).captured[0];
       expect(RouteConst.bookDetailRoute, routeSettings.name);
-      expect("Title2", (routeSettings.arguments as BookDetailScreenArguments).book.title);
+      expect("Title2",
+          (routeSettings.arguments as BookDetailScreenArguments).book.title);
 
       await tester.pumpAndSettle();
     });
   });
-}
-
-class _TestHttpOverrides extends HttpOverrides {}
-
-class FakeFavoritesRepository extends Mock implements IFavoritesRepository {}
-
-class MockOnGenerateRoute extends Mock {
-  Route<dynamic> call(RouteSettings settings);
 }

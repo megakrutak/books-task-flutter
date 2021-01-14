@@ -1,21 +1,15 @@
 import 'package:books_app/data/book.dart';
-import 'package:books_app/model/favorites/repository/favorites_repo.dart';
 import 'package:books_app/ui/book_detail_screen/book_detail_wm.dart';
+import 'package:books_app/ui/widgets/book_cover_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:mwwm/mwwm.dart';
-import 'package:provider/provider.dart';
 import 'package:relation/relation.dart';
 
 class BookDetailScreen extends CoreMwwmWidget {
-  BookDetailScreen({@required Book book})
-      : super(widgetModelBuilder: (context) {
-          return BookDetailWm(
-              context.read<WidgetModelDependencies>(),
-              context.read<IFavoritesRepository>(),
-              book,
-              Navigator.of(context));
-        });
+  BookDetailScreen({@required WidgetModelBuilder widgetModelBuilder})
+      : assert(widgetModelBuilder != null),
+        super(widgetModelBuilder: widgetModelBuilder);
 
   @override
   _BookDetailScreenState createState() => _BookDetailScreenState();
@@ -40,20 +34,9 @@ class _BookDetailScreenState extends WidgetState<BookDetailWm> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Hero(
-          tag: book.id,
-          child: Container(
-              height: 200,
-              width: 150,
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: NetworkImage(book.thumbnailLink),
-                  ),
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(color: Colors.grey.shade600, blurRadius: 32)
-                  ])),
-        ),
+            tag: book.id,
+            child: BookCoverWidget(
+                width: 150, height: 200, imageLink: book.thumbnailLink)),
       ],
     );
   }

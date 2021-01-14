@@ -3,17 +3,17 @@ import 'package:books_app/model/favorites/repository/favorites_repo.dart';
 import 'package:books_app/ui/app.dart';
 import 'package:books_app/ui/favorites_screen/favorites_wm.dart';
 import 'package:books_app/ui/web_screen/web_screen_route.dart';
-import 'package:flutter/widgets.dart' as Widgets;
+import 'package:books_app/utils/navigation/INavigationRouter.dart';
 import 'package:mwwm/mwwm.dart';
 import 'package:relation/relation.dart';
 
 class BookDetailWm extends WidgetModel {
   BookDetailWm(WidgetModelDependencies baseDependencies, this.favoritesRepo,
-      this._book, this.navigator)
+      this._book, this._navigationRouter)
       : super(baseDependencies);
 
   final Book _book;
-  final Widgets.NavigatorState navigator;
+  final INavigationRouter _navigationRouter;
   final IFavoritesRepository favoritesRepo;
 
   final bookState = EntityStreamedState<Book>(EntityState.content());
@@ -47,7 +47,7 @@ class BookDetailWm extends WidgetModel {
     var webLink = book.buyLink ?? book.infoLink;
     var title = book.title ?? webLink;
 
-    navigator.pushNamed(RouteConst.webPreviewRoute,
+    _navigationRouter.pushNamed(RouteConst.webPreviewRoute,
         arguments: WebScreenArguments(webLink, title));
   }
 
