@@ -7,7 +7,7 @@ class Book extends Equatable {
       @required this.title,
       this.description,
       @required this.authors,
-      @required this.thumbnailLink,
+      this.thumbnailLink,
       @required this.infoLink,
       this.buyLink});
 

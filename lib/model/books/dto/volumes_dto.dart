@@ -1,17 +1,18 @@
-import 'package:books_app/data/books_list.dart';
-import 'package:books_app/model/books/dto/volume_dto.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+import 'volume_dto.dart';
+
+part 'volumes_dto.g.dart';
+
+@JsonSerializable(nullable: false)
 class VolumesDto {
-  VolumesDto(this.booksList);
+  final int totalItems;
+  final List<VolumeDto> items;
 
-  final BooksList booksList;
+  VolumesDto({this.totalItems, this.items});
 
-  factory VolumesDto.fromJson(Map<String, dynamic> json) {
-    return VolumesDto(BooksList(
-        totalItems: json["totalItems"],
-        items: (json["items"] as List<dynamic>)
-            .map(
-                (item) => VolumeDto.fromJson(item as Map<String, dynamic>).book)
-            .toList()));
-  }
+  factory VolumesDto.fromJson(Map<String, dynamic> json) =>
+      _$VolumesDtoFromJson(json);
+
+  Map<String, dynamic> toJson() => _$VolumesDtoToJson(this);
 }

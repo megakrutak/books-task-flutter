@@ -37,6 +37,7 @@ class _MainScreenState extends WidgetState<MainWm> {
         onSubmitted: (query) {
           wm.searchBookAction(query);
         },
+        clearOnSubmit: false,
         onCleared: () {},
         onClosed: () {});
   }
@@ -58,10 +59,14 @@ class _MainScreenState extends WidgetState<MainWm> {
   }
 
   Widget _buildBody() {
-    return EntityStateBuilder(
-        streamedState: wm.booksState,
-        loadingChild: Center(child: CircularProgressIndicator()),
-        child: (context, booksList) => _buildBooksList(booksList));
+    return Stack(
+      children: [
+        StreamedStateBuilder(
+            streamedState: wm.booksState,
+            builder: (_, booksList) => _buildBooksList(booksList)),
+        _buildProgress(),
+      ],
+    );
   }
 
   Widget _buildBooksList(BooksList booksList) {
@@ -72,11 +77,17 @@ class _MainScreenState extends WidgetState<MainWm> {
     if (booksList.totalItems == 0 || booksList.items.isEmpty) {
       return _buildInitialContainer("No books found");
     }
+    var booksCount = booksList.items.length;
+    var showMoreItem = (booksList.totalItems > booksCount);
 
     return ListView.separated(
+        controller: wm.booksScrollController,
         separatorBuilder: (context, index) => Divider(height: 4),
-        itemCount: booksList.items.length,
+        itemCount: showMoreItem ? booksCount + 1 : booksCount,
         itemBuilder: (_, index) {
+          if (index == booksList.items.length) {
+            return _buildMoreButton();
+          }
           var book = booksList.items[index];
           return BookListItemWidget(
               book: book, onTap: (book) => wm.openBookDetailAction(book));
@@ -101,5 +112,43 @@ class _MainScreenState extends WidgetState<MainWm> {
         )
       ],
     );
+  }
+
+  Widget _buildMoreButton() {
+    return Container(
+        height: 50,
+        child: StreamedStateBuilder(
+            streamedState: wm.moreLoadingProgress,
+            builder: (_, progress) {
+              if (progress) {
+                return Center(
+                    child: Container(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2)));
+              }
+
+              return FlatButton(
+                  child: Text("SHOW MORE...",
+                      style: TextStyle(color: Colors.deepPurpleAccent)),
+                  onPressed: () {
+                    wm.loadMoreAction();
+                  });
+            }));
+  }
+
+  Widget _buildProgress() {
+    return StreamedStateBuilder(
+        streamedState: wm.loadingProgress,
+        builder: (_, progress) {
+          if (progress) {
+            return Opacity(
+                opacity: 0.8,
+                child: Container(
+                    color: Colors.white,
+                    child: Center(child: CircularProgressIndicator())));
+          }
+          return Container();
+        });
   }
 }

@@ -76,7 +76,7 @@ class _BookDetailScreenState extends WidgetState<BookDetailWm> {
             SizedBox(height: 32),
             _buildButtonsBar(context, book),
             SizedBox(height: 8),
-            Text(book.title, style: theme.textTheme.headline5),
+            Text(book.title ?? "", style: theme.textTheme.headline5),
             SizedBox(height: 16),
             Row(mainAxisAlignment: MainAxisAlignment.end, children: [
               Text("Author: ",

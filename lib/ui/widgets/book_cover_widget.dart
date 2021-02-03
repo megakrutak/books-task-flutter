@@ -8,7 +8,6 @@ class BookCoverWidget extends StatelessWidget {
       @required this.imageLink,
       Key key})
       : assert(width != null && height != null),
-        assert(imageLink != null && imageLink.isNotEmpty),
         super(key: key);
 
   final double width;
@@ -23,7 +22,9 @@ class BookCoverWidget extends StatelessWidget {
         decoration: BoxDecoration(
             image: DecorationImage(
               fit: BoxFit.cover,
-              image: NetworkImage(imageLink),
+              image: imageLink != null
+                  ? NetworkImage(imageLink)
+                  : AssetImage("images/book-placeholder.jpg"),
             ),
             borderRadius: BorderRadius.circular(10),
             boxShadow: [

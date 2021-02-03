@@ -1,13 +1,29 @@
 import 'package:books_app/data/book.dart';
 import 'package:books_app/data/books_list.dart';
+import 'package:books_app/model/books/repository/books_api.dart';
+import 'package:books_app/model/entity_converter.dart';
 
 abstract class IBooksRepository {
-  Future<BooksList> searchBooks(String query);
+  Future<BooksList> searchBooks(String query, int maxResults, int startIndex);
 }
+
+class BooksRepository implements IBooksRepository {
+
+  BooksRepository(this.remoteDataSource);
+
+  final IBooksRemoteDataSource remoteDataSource;
+
+  @override
+  Future<BooksList> searchBooks(String query, int maxResults, int startIndex) async {
+    var volumes = await remoteDataSource.searchVolumes(query, maxResults, startIndex);
+    return BooksConverter().convert(volumes);
+  }
+}
+
 
 class FakeBooksRepository implements IBooksRepository {
   @override
-  Future<BooksList> searchBooks(String query) async {
+  Future<BooksList> searchBooks(String query, int maxResults, int startIndex) async {
     if (query.isEmpty) {
       return Future.delayed(
           Duration(seconds: 2), () => BooksList(totalItems: 0, items: []));

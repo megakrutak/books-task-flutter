@@ -28,7 +28,9 @@ class BookListItemWidget extends StatelessWidget {
               decoration: BoxDecoration(
                 image: DecorationImage(
                   fit: BoxFit.fitHeight,
-                  image: NetworkImage(book.thumbnailLink),
+                  image: book.thumbnailLink != null
+                      ? NetworkImage(book.thumbnailLink)
+                      : AssetImage("images/book-placeholder.jpg"),
                 ),
               ),
             ),
@@ -40,7 +42,7 @@ class BookListItemWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(book.title,
+                Text(book.title ?? "",
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: theme.textTheme.headline6.copyWith(fontSize: 18)),

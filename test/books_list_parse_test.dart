@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:books_app/data/book.dart';
 import 'package:books_app/data/books_list.dart';
 import 'package:books_app/model/books/dto/volumes_dto.dart';
+import 'package:books_app/model/entity_converter.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'fixtures/fixture_reader.dart';
@@ -28,10 +29,9 @@ void main() {
             id: "LJRDAQAAIAAJ",
             title:
                 "The Works of Jonathan Swift: Journal to Stella (Letter XLIII-LXV). Tracts, political and historical, prior to the accession of George I. The Examiner",
-            description: null,
+            description: "",
             authors: List.of(["Jonathan Swift", "Sir Walter Scott"]),
-            thumbnailLink:
-                "http://books.google.com/books/content?id=LJRDAQAAIAAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+            thumbnailLink: null,
             infoLink:
                 "https://play.google.com/store/books/details?id=LJRDAQAAIAAJ&source=gbs_api",
             buyLink: "https://play.google.com/store/books/details?id=LJRDAQAAIAAJ&rdid=book-LJRDAQAAIAAJ&rdot=1&source=gbs_api",
@@ -40,6 +40,6 @@ void main() {
 
     var volumesDto = VolumesDto.fromJson(json.decode(fixture("volumes.json")));
 
-    expect(booksList, volumesDto.booksList);
+    expect(booksList, BooksConverter().convert(volumesDto));
   });
 }

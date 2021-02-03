@@ -1,7 +1,8 @@
+import 'package:books_app/model/books/repository/books_api.dart';
 import 'package:books_app/model/books/repository/books_repo.dart';
 import 'package:books_app/model/favorites/repository/favorites_repo.dart';
 import 'package:books_app/ui/app.dart';
-import 'package:books_app/utils/navigation/INavigationRouter.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
 import 'package:mwwm/mwwm.dart';
 import 'package:provider/provider.dart';
@@ -16,7 +17,14 @@ void main() {
       Provider<IFavoritesRepository>(
         create: (context) => FakeFavoritesRepository(),
       ),
-      Provider<IBooksRepository>(create: (context) => FakeBooksRepository()),
+      Provider<Dio>(
+        create: (context) => Dio(),
+      ),
+      Provider<IBooksRemoteDataSource>(
+        create: (context) => BooksRemoteDataSource(context.read()),
+      ),
+      Provider<IBooksRepository>(
+          create: (context) => BooksRepository(context.read())),
     ],
     child: BooksApp(),
   ));

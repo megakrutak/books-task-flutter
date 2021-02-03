@@ -47,7 +47,7 @@ void main() {
 
     test("search book action test", () async {
       var repo = FakeBooksRepo();
-      when(repo.searchBooks(any)).thenAnswer((realInvocation) {
+      when(repo.searchBooks(any, any, any)).thenAnswer((realInvocation) {
         return Future.delayed(
             Duration(milliseconds: 100), () => Future.value(books));
       });
@@ -56,13 +56,13 @@ void main() {
 
       wm.searchBookAction("query");
 
-      await untilCalled(repo.searchBooks(any));
-      verify(repo.searchBooks("query")).called(1);
+      await untilCalled(repo.searchBooks(any, any, any));
+      verify(repo.searchBooks("query", any, any)).called(1);
     });
 
     test("open book detail action test", () async {
       var repo = FakeBooksRepo();
-      when(repo.searchBooks(any)).thenAnswer((realInvocation) {
+      when(repo.searchBooks(any, any, any)).thenAnswer((realInvocation) {
         return Future.delayed(
             Duration(milliseconds: 100), () => Future.value(books));
       });
@@ -84,7 +84,7 @@ void main() {
 
     test("open book detail action test", () async {
       var repo = FakeBooksRepo();
-      when(repo.searchBooks(any)).thenAnswer((realInvocation) {
+      when(repo.searchBooks(any, any, any)).thenAnswer((realInvocation) {
         return Future.delayed(
             Duration(milliseconds: 100), () => Future.value(books));
       });

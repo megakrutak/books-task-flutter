@@ -30,6 +30,8 @@ class MockOnGenerateRoute extends Mock {
 void main() {
   WidgetModelDependencies deps;
   BooksList booksFromSearch;
+  BooksList booksFromSearchShowMore;
+  BooksList booksFromSearchShowMore2;
   INavigationRouter navigationRouter;
 
   setUp(() {
@@ -37,7 +39,7 @@ void main() {
     deps = WidgetModelDependencies();
     HttpOverrides.global = _TestHttpOverrides();
     booksFromSearch = BooksList(
-        totalItems: 20,
+        totalItems: 2,
         items: List.of([
           Book(
               id: "id1",
@@ -57,16 +59,58 @@ void main() {
               infoLink:
                   "http://books.google.ru/books?id=z60yAAAAIAAJ&dq=%D0%B0%D1%80%D0%B0%D0%BF&hl=&source=gbs_api")
         ]));
+    booksFromSearchShowMore = BooksList(
+        totalItems: 4,
+        items: List.of([
+          Book(
+              id: "id1",
+              title: "Title1",
+              authors: ["authors"],
+              description: "description",
+              thumbnailLink:
+              "http://books.google.com/books/content?id=XLVnCAAAQBAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api",
+              infoLink:
+              "http://books.google.ru/books?id=z60yAAAAIAAJ&dq=%D0%B0%D1%80%D0%B0%D0%BF&hl=&source=gbs_api"),
+          Book(
+              id: "id2",
+              title: "Title2",
+              authors: ["author1", "author2"],
+              thumbnailLink:
+              "http://books.google.com/books/content?id=XLVnCAAAQBAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api",
+              infoLink:
+              "http://books.google.ru/books?id=z60yAAAAIAAJ&dq=%D0%B0%D1%80%D0%B0%D0%BF&hl=&source=gbs_api")
+        ]));
+    booksFromSearchShowMore2 = BooksList(
+        totalItems: 4,
+        items: List.of([
+          Book(
+              id: "id3",
+              title: "Title3",
+              authors: ["authors"],
+              description: "description",
+              thumbnailLink:
+              "http://books.google.com/books/content?id=XLVnCAAAQBAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api",
+              infoLink:
+              "http://books.google.ru/books?id=z60yAAAAIAAJ&dq=%D0%B0%D1%80%D0%B0%D0%BF&hl=&source=gbs_api"),
+          Book(
+              id: "id4",
+              title: "Title4",
+              authors: ["author1", "author2"],
+              thumbnailLink:
+              "http://books.google.com/books/content?id=XLVnCAAAQBAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api",
+              infoLink:
+              "http://books.google.ru/books?id=z60yAAAAIAAJ&dq=%D0%B0%D1%80%D0%B0%D0%BF&hl=&source=gbs_api")
+        ]));
   });
 
   group("Main screen test", () {
     testWidgets("App bar search button test", (WidgetTester tester) async {
       var repo = FakeBooksRepo();
-      when(repo.searchBooks(any)).thenAnswer((_) => Future.delayed(
+      when(repo.searchBooks(any, any, any)).thenAnswer((_) => Future.delayed(
           Duration(milliseconds: 100), () => Future.value(booksFromSearch)));
 
       var widget = MaterialApp(home: MainScreen(widgetModelBuilder: (context) {
-        return MainWm(deps, repo, navigationRouter);
+        return MainWm(deps, repo, navigationRouter, maxResults: 2);
       }));
 
       await tester.pumpWidget(widget);
@@ -91,6 +135,7 @@ void main() {
 
       expect(find.text("Title1"), findsOneWidget);
       expect(find.text("Title2"), findsOneWidget);
+      expect(find.text("SHOW MORE..."), findsNothing);
 
       expect(find.text("query to search"), findsOneWidget);
       expect(find.text("Books"), findsNothing);
@@ -117,5 +162,57 @@ void main() {
       RouteSettings settings = verify(router.call(captureAny)).captured[0];
       expect(RouteConst.favoritesRoute, settings.name);
     });
+
+
+    testWidgets("App bar search button with show more button test", (WidgetTester tester) async {
+      var repo = FakeBooksRepo();
+      when(repo.searchBooks(any, any, 0)).thenAnswer((_) => Future.delayed(
+          Duration(milliseconds: 100), () => Future.value(booksFromSearchShowMore)));
+
+      when(repo.searchBooks(any, any, 2)).thenAnswer((_) => Future.delayed(
+          Duration(milliseconds: 100), () => Future.value(booksFromSearchShowMore2)));
+
+      var widget = MaterialApp(home: MainScreen(widgetModelBuilder: (context) {
+        return MainWm(deps, repo, navigationRouter, maxResults: 2);
+      }));
+
+      await tester.pumpWidget(widget);
+
+      expect(find.text("Books"), findsOneWidget);
+      await tester.tap(find.byIcon(Icons.search));
+      await tester.pump();
+
+      tester.testTextInput.enterText("query to search");
+      await tester.testTextInput.receiveAction(TextInputAction.search);
+      await tester.pump();
+
+      var progress = find
+          .byWidgetPredicate((widget) => widget is CircularProgressIndicator);
+      expect(progress, findsOneWidget);
+      await tester.pumpAndSettle();
+      expect(progress, findsNothing);
+
+      var books =
+      find.byWidgetPredicate((widget) => widget is BookListItemWidget);
+      expect(books, findsNWidgets(2));
+
+      expect(find.text("Title1"), findsOneWidget);
+      expect(find.text("Title2"), findsOneWidget);
+
+      expect(find.text("query to search"), findsOneWidget);
+      expect(find.text("Books"), findsNothing);
+
+      var showMoreButton = find.text("SHOW MORE...");
+      expect(showMoreButton, findsOneWidget);
+
+      await tester.tap(showMoreButton);
+      await tester.pumpAndSettle();
+
+      expect(find.text("Title3"), findsOneWidget);
+      expect(find.text("Title4"), findsOneWidget);
+
+      await tester.pumpAndSettle();
+    });
+
   });
 }
