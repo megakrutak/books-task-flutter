@@ -87,7 +87,7 @@ class _FavoritesScreenState extends WidgetState<FavoritesWm> {
       ],
     );
     var actions = [
-      FlatButton(
+      TextButton(
           onPressed: () => Navigator.of(context).pop(), child: Text("OK"))
     ];
 

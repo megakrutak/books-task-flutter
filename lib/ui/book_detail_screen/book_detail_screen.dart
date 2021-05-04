@@ -69,23 +69,27 @@ class _BookDetailScreenState extends WidgetState<BookDetailWm> {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 32),
             _buildBookCover(book),
             SizedBox(height: 32),
             _buildButtonsBar(context, book),
             SizedBox(height: 8),
-            Text(book.title ?? "", style: theme.textTheme.headline5),
+            Center(child: Text(book.title ?? "", style: theme.textTheme.headline5)),
             SizedBox(height: 16),
-            Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-              Text("Author: ",
-                  style: theme.textTheme.bodyText1
-                      .copyWith(color: Colors.grey.shade700)),
-              Text(book.authors.join(", "),
-                  style: theme.textTheme.bodyText1
-                      .copyWith(fontWeight: FontWeight.bold)),
-            ]),
+            RichText(
+                text: TextSpan(
+                    text: "Author: ",
+                    style: theme.textTheme.bodyText1
+                        .copyWith(color: Colors.grey.shade700),
+                    children: [
+                  TextSpan(
+                      text: book.authors.join(", "),
+                      style: theme.textTheme.bodyText1
+                          .copyWith(fontWeight: FontWeight.bold))
+                ])),
             SizedBox(height: 16),
             Text(book.description ?? "",
                 style: theme.textTheme.bodyText1, textAlign: TextAlign.justify)

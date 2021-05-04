@@ -128,7 +128,7 @@ class _MainScreenState extends WidgetState<MainWm> {
                         child: CircularProgressIndicator(strokeWidth: 2)));
               }
 
-              return FlatButton(
+              return TextButton(
                   child: Text("SHOW MORE...",
                       style: TextStyle(color: Colors.deepPurpleAccent)),
                   onPressed: () {

@@ -20,16 +20,18 @@ class Book extends Equatable {
   final String buyLink;
 
   @override
-  String toString() => {
-    'id': id,
-    'title': title,
-    'description': description,
-    'authors': authors.toString(),
-    'thumbnailLink': thumbnailLink.toString(),
-    'infoLink': infoLink.toString(),
-    'buyLink': buyLink.toString()
-  }.toString();
+  String toString() => toMap().toString();
 
   @override
   List<Object> get props => [id, title, description, authors, thumbnailLink, infoLink, buyLink];
+
+  Map<String, dynamic> toMap() => {
+    'id': id,
+    'title': title,
+    'description': description,
+    'authors': authors.join(", "),
+    'thumbnailLink': thumbnailLink.toString(),
+    'infoLink': infoLink.toString(),
+    'buyLink': buyLink.toString()
+  };
 }

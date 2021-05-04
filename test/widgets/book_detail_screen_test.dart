@@ -68,7 +68,12 @@ void main() {
       expect(find.text("Book details"), findsOneWidget);
       expect(find.text("Title1"), findsOneWidget);
       expect(find.text("Description1"), findsOneWidget);
-      expect(find.text("author1, author2"), findsOneWidget);
+
+      expect(find.byWidgetPredicate((widget) {
+        return widget is RichText &&
+            widget.text.toPlainText() == "Author: author1, author2";
+      }), findsOneWidget);
+
       expect(find.byWidgetPredicate((widget) {
         return widget is BookCoverWidget &&
             widget.imageLink == book.thumbnailLink;

@@ -1,10 +1,47 @@
 import 'package:books_app/data/book.dart';
+import 'package:books_app/model/database/database_helper.dart';
 
 abstract class IFavoritesRepository {
   Future<List<Book>> getBooks();
   Future addBook(Book book);
-  Future removeBook(book);
-  Future<bool> contains(book);
+  Future removeBook(Book book);
+  Future<bool> contains(Book book);
+}
+
+class FavoritesRepository implements IFavoritesRepository {
+  final DatabaseHelper _dbHelper;
+
+  FavoritesRepository(this._dbHelper);
+
+  @override
+  Future addBook(Book book) async {
+    return _dbHelper.insert(book.toMap());
+  }
+
+  @override
+  Future<bool> contains(Book book) async {
+    return _dbHelper.contains(book.id);
+  }
+
+  @override
+  Future<List<Book>> getBooks() async {
+    var result = await _dbHelper.queryAllRows();
+    return result
+        .map((e) => Book(
+            id: e[DatabaseHelper.columnId],
+            title: e[DatabaseHelper.columnTitle],
+            description: e[DatabaseHelper.columnDescription],
+            authors: e[DatabaseHelper.columnAuthors].toString().split(", "),
+            thumbnailLink: e[DatabaseHelper.columnThumbnailLink],
+            infoLink: e[DatabaseHelper.columnInfoLink],
+            buyLink: e[DatabaseHelper.columnBuyLink]))
+        .toList();
+  }
+
+  @override
+  Future removeBook(Book book) async {
+    return await _dbHelper.delete(book.id);
+  }
 }
 
 class FakeFavoritesRepository implements IFavoritesRepository {
@@ -42,6 +79,7 @@ class FakeFavoritesRepository implements IFavoritesRepository {
 
   @override
   Future<bool> contains(book) {
-    return Future.delayed(Duration(milliseconds: 200), () => books.contains(book));
+    return Future.delayed(
+        Duration(milliseconds: 200), () => books.contains(book));
   }
 }

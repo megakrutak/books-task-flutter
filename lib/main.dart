@@ -1,5 +1,6 @@
 import 'package:books_app/model/books/repository/books_api.dart';
 import 'package:books_app/model/books/repository/books_repo.dart';
+import 'package:books_app/model/database/database_helper.dart';
 import 'package:books_app/model/favorites/repository/favorites_repo.dart';
 import 'package:books_app/ui/app.dart';
 import 'package:dio/dio.dart';
@@ -15,7 +16,8 @@ void main() {
             WidgetModelDependencies(errorHandler: DefaultErrorHandler()),
       ),
       Provider<IFavoritesRepository>(
-        create: (context) => FakeFavoritesRepository(),
+        create: (context) =>
+            FavoritesRepository(DatabaseHelper.instance),
       ),
       Provider<Dio>(
         create: (context) => Dio(),

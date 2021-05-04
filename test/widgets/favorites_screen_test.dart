@@ -134,7 +134,7 @@ void main() {
       var alertDialog = find.text("Instruction");
 
       expect(alertDialog, findsOneWidget);
-      await tester.tap(find.widgetWithText(FlatButton, "OK"));
+      await tester.tap(find.widgetWithText(TextButton, "OK"));
 
       await tester.pumpAndSettle();
       expect(alertDialog, findsNothing);
