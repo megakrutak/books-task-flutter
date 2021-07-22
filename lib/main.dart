@@ -8,7 +8,9 @@ import 'package:flutter/widgets.dart';
 import 'package:mwwm/mwwm.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+Future<void> main() async {
+  await Future.delayed(Duration(seconds: 5));
+
   runApp(MultiProvider(
     providers: [
       Provider(
@@ -16,8 +18,7 @@ void main() {
             WidgetModelDependencies(errorHandler: DefaultErrorHandler()),
       ),
       Provider<IFavoritesRepository>(
-        create: (context) =>
-            FavoritesRepository(DatabaseHelper.instance),
+        create: (context) => FavoritesRepository(DatabaseHelper.instance),
       ),
       Provider<Dio>(
         create: (context) => Dio(),
